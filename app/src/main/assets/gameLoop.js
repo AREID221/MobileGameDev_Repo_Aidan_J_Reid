@@ -1,16 +1,19 @@
 function gameLoop()
 {
+    //console.debug(a);
     let elapsed = new Date().getTime() - startTimeMS;
     Update(elapsed);
     
-    player.draw(context);
-    randomTestImage.drawTile(context);
-    for (var i = 0; i < tiles.length; i++)
-    { 
-        //randomTestImage.Position.x = tiles.x;
-        //randomTestImage.Position.y = tiles.y;
+    floorTile0.drawTile(context);
+    floorTile1.drawTile(context);
+    floorTile2.drawTile(context);
+    floorTile3.drawTile(context);
 
-    }
+    wallTile0.drawWall(context);
+
+    player.draw(context);
+
+    
 
     
     requestAnimationFrame(gameLoop);

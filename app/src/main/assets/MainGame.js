@@ -8,23 +8,65 @@ let startTimeMS = 0;
 // World variables
 let friction = 0.8;
 // Player character
-let player = new gameObject(0, 0, 0, 0, "braidSpritesheet.png");
-let randomTestImage = new gameObject(0, 0, 0, 0, "Floor_Tile.png");
+let player = new gameObject(0, 0, 0, 0, "Skeleton_Idle.png");
+//player.img = new Image(50, 50);
+
+//#region TILESET
+
+let tiles;
+tiles = [];
+tiles.length = 100;
+
+
+// Four floor tiles are broken up into each quarter of game screen.
+let floorTile0 = new Tiles(0, 0, "test tile.png");
+let floorTile1 = new Tiles(0, 0, "test tile.png");
+let floorTile2 = new Tiles(0, 0, "test tile.png");
+let floorTile3 = new Tiles(0, 0, "test tile.png");
+
+let wallTile0 = new wallTiles(0, 0, "Wall.png");
+
+//#endregion
+
+
+
 // Set up tiles on array (follow collision lab for hints).
-let tiles = [];
+
+
 // Input
 let keys = [];
-// Animation
+
+// Animation: SPRITE NOT SCALED TO IMAGE PROPERLY AND CAN SEE GAME ITERATING THROUGH INDIVIDUAL SPRITES ON SHEET. >:(
+// let frameX = 0;
+// let frameXMax = 10; // 
+// let frameY = 0;
+// let frameYMax = 1;
+// let frame = 0;
+// let frameMax = 28;
+// let frameTimer = 0.05;
+// let frameTimeMax = 0.001;
+// let spriteWidth = 32;
+// let spriteHeight = 32;
+// let tileWidth = 16;
+// let tileHeight = 20;
+
+// Old animation values.
 let frameX = 0;
-let frameXMax = 6;
+let frameXMax = 4;
 let frameY = 0;
-let frameYMax = 3;
+let frameYMax = 0;
 let frame = 0;
-let frameMax = 26;
+let frameMax = 28;
 let frameTimer = 0.05;
-let frameTimeMax = 0.017;
-let spriteWidth = 74;
-let spriteHeight = 86;
+let frameTimeMax = 0.005;
+let spriteWidth = 30;
+let spriteHeight = 43;
+
+let tileWidth = 16;
+let tileHeight = 20;
+
+let wallTileWidth = 30;
+let wallTileHeight = 16;
 
 // When application first loads
 window.onload = function()
@@ -33,13 +75,41 @@ window.onload = function()
     startTimeMS = new Date().getTime();
 
     // Set the player position coords and draw it
-    player.Position.x = 0;
+    player.Position.x = canvas.width / 2;
     player.Position.y = canvas.height / 2;
 
-    randomTestImage.Position.x = 0;
-    randomTestImage.Position.y = 0;
-    // tiles.push({x: randomTestImage.Position.x + 50, y: randomTestImage.Position.y + 50, width: randomTestImage.width, height: randomTestImage.height});
-    // tiles.push({x: randomTestImage.Position.x + 50, y: randomTestImage.Position.y + 50, width: randomTestImage.width, height: randomTestImage.height});    
+    wallTile0.Position.x = 150;
+    wallTile0.Position.y = canvas.height / 2;
+
+    // tiles.push({x: 50, y: 50, width: 50, height: 50});
+    // tiles.push({x: 100, y: 100, width: 50, height: 50});
+ 
+
+    for (var i = 0; i < tiles.length; i++)
+    {
+        if (i == 0)
+        {
+            floorTile0.Position.x = floorTile0.Position.x + 0;
+            floorTile0.Position.y = floorTile0.Position.y + 0;
+        }
+        else if (i == 1)
+        {
+            floorTile1.Position.x = floorTile0.Position.x + canvas.width / 2;
+            floorTile1.Position.y = floorTile0.Position.y + 0;
+        }
+        else if (i == 2)
+        {
+            floorTile2.Position.x = floorTile0.Position.x + 0;
+            floorTile2.Position.y = floorTile0.Position.y + canvas.height / 2;
+        }
+        else if (i == 3)
+        {
+            floorTile3.Position.x = floorTile0.Position.x + canvas.width / 2;
+            floorTile3.Position.y = floorTile0.Position.y + canvas.height / 2;
+        }
+    }
+
+    
 
     // Game over is always set to false right now as lacking menu(s), so this if statement will always return true
     if (!gameOver)
@@ -51,9 +121,7 @@ window.onload = function()
 function colCheck(shapeA, shapeB)
 {
 
-    shapeA = player;
-    shapeB = randomTestImage;
-
+    // No need to set shapes in here.
     let vX = (shapeA.Position.x + (shapeA.img.width / 2)) - (shapeB.Position.x + (shapeB.img.width / 2)),
         vY = (shapeA.Position.y + (shapeA.img.height / 2)) - (shapeB.Position.y + (shapeB.img.height / 2)),
         hWidths = (shapeA.img.width / 2) + (shapeB.img.width / 2),
@@ -154,7 +222,7 @@ function Update(delta)
     
 
 
-    let dir = colCheck(player);
+    let dir = colCheck(player, wallTile0);
 
     // If collision check returns with a left or right collision,
     // set the player's x velocity to 0 so they cannot move through
@@ -192,6 +260,7 @@ function Update(delta)
     player.Position.x += player.Velocity.x;
     player.Position.y += player.Velocity.y;
 
+    //idleAnimationFrame();
     animationFrame();
     // Fill background
      context.fillStyle = "grey";
