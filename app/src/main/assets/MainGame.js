@@ -7,10 +7,11 @@ let gameOver = false;
 let startTimeMS = 0;
 // World variables
 let friction = 0.8;
-let gravity = -0.25;
-
 // Player character
-let player = new playerObj(0, 0, 0, 0, "braidSpritesheet.png");
+let player = new gameObject(0, 0, 0, 0, "braidSpritesheet.png");
+let randomTestImage = new gameObject(0, 0, 0, 0, "Floor_Tile.png");
+// Set up tiles on array (follow collision lab for hints).
+let tiles = [];
 // Input
 let keys = [];
 // Animation
@@ -25,18 +26,6 @@ let frameTimeMax = 0.017;
 let spriteWidth = 74;
 let spriteHeight = 86;
 
-//Tiles
-let wallTile_Vent = new tileObj(0, 0, "testTile.png");
-let tileWidth = 200;
-let tileHeight = 200;
-// Surfaces
-let floorStandard = new repeatStdFloor(0, 0, "testFloor.png");
-let floorWidth = 90;
-let floorHeight = 150;
-
-let floor = [];
-floor.length = 10;
-
 // When application first loads
 window.onload = function()
 {
@@ -47,11 +36,10 @@ window.onload = function()
     player.Position.x = 0;
     player.Position.y = canvas.height / 2;
 
-    wallTile_Vent.Position.x = 0;
-    wallTile_Vent.Position.y = canvas.height / 2 + 86;
-
-    floorStandard.Position.x = 0;
-    floorStandard.Position.y = canvas.height / 2 + 50;
+    randomTestImage.Position.x = 0;
+    randomTestImage.Position.y = 0;
+    // tiles.push({x: randomTestImage.Position.x + 50, y: randomTestImage.Position.y + 50, width: randomTestImage.width, height: randomTestImage.height});
+    // tiles.push({x: randomTestImage.Position.x + 50, y: randomTestImage.Position.y + 50, width: randomTestImage.width, height: randomTestImage.height});    
 
     // Game over is always set to false right now as lacking menu(s), so this if statement will always return true
     if (!gameOver)
@@ -62,13 +50,9 @@ window.onload = function()
 
 function colCheck(shapeA, shapeB)
 {
-    for (let c = 0; c < floor.length; c++)
-    {
-
-    }
 
     shapeA = player;
-    shapeB = floorStandard;
+    shapeB = randomTestImage;
 
     let vX = (shapeA.Position.x + (shapeA.img.width / 2)) - (shapeB.Position.x + (shapeB.img.width / 2)),
         vY = (shapeA.Position.y + (shapeA.img.height / 2)) - (shapeB.Position.y + (shapeB.img.height / 2)),
@@ -138,13 +122,13 @@ function Update(delta)
     if (keys[65])
     {
         player.Velocity.x = player.Velocity.x -0.5;
-        animationFrame();
+        //animationFrame();
     }
 
     if (keys[68])
     {
         player.Velocity.x = player.Velocity.x +0.5;
-        animationFrame();
+        //animationFrame();
     }
 
     // Lines 147-153 resets the player position to the starting position
@@ -156,25 +140,21 @@ function Update(delta)
         player.Position.y = canvas.height / 2;
     }
 
-    /*
-        // ***OLD*** Top-down y position movement ***OLD***
-
     if (keys[87])
     {
-        player.Velocity.y = sprite.Velocity.y -0.5;
-        animationFrame();
+        player.Velocity.y = player.Velocity.y -0.5;
+        //animationFrame();
     }
 
     if (keys[83])
     {
-        player.Velocity.y = sprite.Velocity.y +0.5;
-        animationFrame();
+        player.Velocity.y = player.Velocity.y +0.5;
+        //animationFrame();
     }
-    */
+    
 
 
     let dir = colCheck(player);
-    //let dirFloor = floorStandard.colCheck(floorStandard, player);
 
     // If collision check returns with a left or right collision,
     // set the player's x velocity to 0 so they cannot move through
@@ -204,26 +184,19 @@ function Update(delta)
         }
     }
 
-
-    // If the player tells us they want to jump then apply upward force
-    if (isJumping)
-    {
-        player.Velocity.y -= 7.5;
-    }
-
-    // The player's x movement velocity is countered by world friction, this prevents
+    // The player's x/y movement velocity is countered by world friction, this prevents
     // sliding and provides more accurate movement
     player.Velocity.x *= friction;
-    // The player's y movement velocity is affected by world gravity
-    player.Velocity.y -= gravity;
+    player.Velocity.y *= friction;
     // Apply x and y velocity to player's x and y position coords
     player.Position.x += player.Velocity.x;
     player.Position.y += player.Velocity.y;
 
+    animationFrame();
     // Fill background
-     context.fillStyle = "blue";
+     context.fillStyle = "grey";
      context.beginPath();
      context.fill();
-     context.fillStyle = "blue";
+     context.fillStyle = "grey";
      context.fillRect(0, 0, 1366, 720);
 }
