@@ -1,6 +1,9 @@
+
+// Non-static sprites run through a spritesheet
+// X/Y of image cut into frames to appear animated.
 function animationFrame()
 {
-    let elapsed = (Date.now() - startTimeMS) / 7500;
+    let elapsed = (Date.now() - startTimeMS) / 1000;
     startTimeMS = Date.now();
 
     frameTimer = frameTimer - elapsed;
