@@ -1,59 +1,52 @@
 // Canvas
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
-// let context;
-// context = canvas.getContext('2d');
+
 // Game state
 let gameOver = true;
-let startTimeMS = 0;
-// World variables
-let friction = 0.8;
-
 let gameState = 0;
 
-var menuImg = new Image();
-menuImg.src = "./main_menu.png";
+// World variables
+let startTimeMS = 0;
+let friction = 0.8;
 
-var gameOverImg = new Image();
-gameOverImg.src = "./game_over.png";
-
-//const sfx = document.getElementById("SFX");
-
-let themeTune = new Audio("./fantasy_music.mp3");
-themeTune.volume = 0.25;
-themeTune.autoplay = true;
-
-let goldCollected = new Audio("./goldSFX.mp3");
-goldCollected.volume = 0.7;
-
-// Player character
-let player = new gameObject(0, 0, 0, 0, "./braidSpritesheet.png");
+// Player character.
+let player = new gameObject(0, 0, 0, 0, "./Player/braidSpritesheet.png");
 player.img.width = 50;
 player.img.height = 50;
 
-let goldChest0 = new gameObject(0,0,0,0, "./gold_tile.png");
+// #region Collectibles
+// Collectible 1.
+let goldChest0 = new gameObject(0,0,0,0, "./Collectibles/gold_tile.png");
 goldChest0.img.width = 50;
 goldChest0.img.height = 50;
 
-let goldChest1 = new gameObject(0,0,0,0, "./gold_tile.png");
+// Collectible 2.
+let goldChest1 = new gameObject(0,0,0,0, "./Collectibles/gold_tile.png");
 goldChest1.img.width = 50;
 goldChest1.img.height = 50;
 
-let goldChest2 = new gameObject(0,0,0,0, "./gold_tile.png");
+// Collectible 3.
+let goldChest2 = new gameObject(0,0,0,0, "./Collectibles/gold_tile.png");
 goldChest2.img.width = 50;
 goldChest2.img.height = 50;
 
-let goldChest3 = new gameObject(0,0,0,0, "./gold_tile.png");
+// Collectible 4.
+let goldChest3 = new gameObject(0,0,0,0, "./Collectibles/gold_tile.png");
 goldChest3.img.width = 50;
 goldChest3.img.height = 50;
 
-let goldChest4 = new gameObject(0,0,0,0, "./gold_tile.png");
+// Collectible 5.
+let goldChest4 = new gameObject(0,0,0,0, "./Collectibles/gold_tile.png");
 goldChest4.img.width = 50;
 goldChest4.img.height = 50;
 
-let coinsCollected = 0;
+let totalGoldCollected = 0;
+// #endregion
 
-// #region Collision
+// #region Collision objects
+// No need to look up an image since these objects are invisible.
+
 let collider0 = new gameObject(0, 0, 0, 0, "");
 collider0.img.width = 1366;
 collider0.img.height = 25;
@@ -137,134 +130,132 @@ collider019.img.height = 80;
 // #endregion
 
 //#region TILES
+// Attempts to push game objects to array for use in tilemap have failed,
+// but keeping the code here to document idea/thinking behind tileset during development.
 
-let wallTile0 = new gameObject(0, 0, 0, 0, "./Wall.png");
-wallTile0.img.width = 91;
-wallTile0.img.height = 50;
-
-let wallTile1 = new gameObject(0, 0, 0, 0, "./Wall.png");
+let wallTile1 = new gameObject(0, 0, 0, 0, "./Tileset/Wall.png");
 wallTile1.img.width = 50;
 wallTile1.img.height = 50;
 
 //placeTiles.push(wallTile1);
 
-let floorTile0 = new gameObject(0, 0, 0, 0, "./test tile.png");
+let floorTile0 = new gameObject(0, 0, 0, 0, "./Tileset/test tile.png");
 floorTile0.img.width = 50;
 floorTile0.img.height = 50;
 
 //placeTiles.push(floorTile0);
 
-let testObj = new gameObject(0, 0, 0, 0, "./Floor_Dark.png");
+let testObj = new gameObject(0, 0, 0, 0, "./Tileset/Floor_Dark.png");
 testObj.img.width = 50;
 testObj.img.height = 50;
 
 //placeTiles.push(testObj);
 
-let cornerObjTL = new gameObject(0,0,0,0, "./Corner_TL.png");
+let cornerObjTL = new gameObject(0,0,0,0, "./Tileset/Corner_TL.png");
 cornerObjTL.img.width = 50;
 cornerObjTL.img.height = 50;
 
 //placeTiles.push(cornerObjTL);
 
-let cornerObjTLDark = new gameObject(0,0,0,0, "./Corner_Dark_TL.png");
+let cornerObjTLDark = new gameObject(0,0,0,0, "./Tileset/Corner_Dark_TL.png");
 cornerObjTLDark.img.width = 50;
 cornerObjTLDark.img.height = 50;
 
 //placeTiles.push(cornerObjTLDark);
 
-let cornerObjTR = new gameObject(0,0,0,0, "./Corner_TR.png");
+let cornerObjTR = new gameObject(0,0,0,0, "./Tileset/Corner_TR.png");
 cornerObjTR.img.width = 50;
 cornerObjTR.img.height = 50;
 
 //placeTiles.push(cornerObjTR);
 
-let cornerObjTRDark = new gameObject(0,0,0,0, "./Corner_Dark_TR.png");
+let cornerObjTRDark = new gameObject(0,0,0,0, "./Tileset/Corner_Dark_TR.png");
 cornerObjTRDark.img.width = 50;
 cornerObjTRDark.img.height = 50;
 
 //placeTiles.push(cornerObjTRDark);
 
-let cornerObjBL = new gameObject(0,0,0,0, "./Corner_BL.png");
+let cornerObjBL = new gameObject(0,0,0,0, "./Tileset/Corner_BL.png");
 cornerObjBL.img.width = 50;
 cornerObjBL.img.height = 50;
 
 //placeTiles.push(cornerObjBL);
 
-let cornerObjBLDark = new gameObject(0,0,0,0, "./Corner_Dark_BL.png");
+let cornerObjBLDark = new gameObject(0,0,0,0, "./Tileset/Corner_Dark_BL.png");
 cornerObjBLDark.img.width = 50;
 cornerObjBLDark.img.height = 50;
 
 //placeTiles.push(cornerObjBLDark);
 
-let cornerObjBR = new gameObject(0,0,0,0, "./Corner_BR.png");
+let cornerObjBR = new gameObject(0,0,0,0, "./Tileset/Corner_BR.png");
 cornerObjBR.img.width = 50;
 cornerObjBR.img.height = 50;
 
 //placeTiles.push(cornerObjBR);
 
-let cornerObjBRDark = new gameObject(0,0,0,0, "./Corner_Dark_BR.png");
+let cornerObjBRDark = new gameObject(0,0,0,0, "./Tileset/Corner_Dark_BR.png");
 cornerObjBRDark.img.width = 50;
 cornerObjBRDark.img.height = 50;
 
 //placeTiles.push(cornerObjBRDark);
 
-let objT = new gameObject(0,0,0,0, "./Tile_Wall_T.png");
+let objT = new gameObject(0,0,0,0, "./Tileset/Tile_Wall_T.png");
 objT.img.width = 50;
 objT.img.height = 50;
 
 //placeTiles.push(objT);
 
-let objTDark = new gameObject(0,0,0,0, "./Wall_T_Dark.png");
+let objTDark = new gameObject(0,0,0,0, "./Tileset/Wall_T_Dark.png");
 objTDark.img.width = 50;
 objTDark.img.height = 50;
 
 //placeTiles.push(objTDark);
 
-let objB = new gameObject(0,0,0,0, "./Tile_Wall_B.png");
+let objB = new gameObject(0,0,0,0, "./Tileset/Tile_Wall_B.png");
 objB.img.width = 50;
 objB.img.height = 50;
 
 //placeTiles.push(objB);
 
-let objBDark = new gameObject(0,0,0,0, "./Wall_B_Dark.png");
+let objBDark = new gameObject(0,0,0,0, "./Tileset/Wall_B_Dark.png");
 objBDark.img.width = 50;
 objBDark.img.height = 50;
 
 //placeTiles.push(objBDark);
 
-let objL = new gameObject(0,0,0,0, "./Tile_Wall_L.png");
+let objL = new gameObject(0,0,0,0, "./Tileset/Tile_Wall_L.png");
 objL.img.width = 50;
 objL.img.height = 50;
 
 //placeTiles.push(objL);
 
-let objLDark = new gameObject(0,0,0,0, "./Wall_L_Dark.png");
+let objLDark = new gameObject(0,0,0,0, "./Tileset/Wall_L_Dark.png");
 objLDark.img.width = 50;
 objLDark.img.height = 50;
 
 //placeTiles.push(objLDark);
 
-let objR = new gameObject(0,0,0,0, "./Tile_Wall_R.png");
+let objR = new gameObject(0,0,0,0, "./Tileset/Tile_Wall_R.png");
 objR.img.width = 50;
 objR.img.height = 50;
 
 //placeTiles.push(objR);
 
-let objRDark = new gameObject(0,0,0,0, "./Wall_R_Dark.png");
+let objRDark = new gameObject(0,0,0,0, "./Tileset/Wall_R_Dark.png");
 objRDark.img.width = 50;
 objRDark.img.height = 50;
 
 //placeTiles.push(objRDark);
 
-let darkTile = new gameObject(0,0,0,0, "./dark_tile.png");
+let darkTile = new gameObject(0,0,0,0, "./Tileset/dark_tile.png");
 darkTile.img.width = 50;
 darkTile.img.height = 50;
 
 //placeTiles.push(darkTile);
 
-var tileSetW = 28, tileSetH = 15;
+let tileSetW = 28, tileSetH = 15;
 
-var tileSet = 
+let tileSet = 
 [
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 
@@ -296,16 +287,12 @@ var tileSet =
     
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 ];
-
-
-
 //#endregion
 
 // Input
 let keys = [];
 
 //#region Animation
-
 let frameX = 0;
 let frameXMax = 6;
 let frameY = 0;
@@ -316,26 +303,56 @@ let frameTimer = 0.05;
 let frameTimeMax = 0.017;
 let spriteWidth = 74;
 let spriteHeight = 86;
-
 //#endregion
 
-// When application first loads
+// #region Lookups
+// Main menu background image.
+let menuImg = new Image();
+menuImg.src = "./Menus/main_menu.png";
+
+// Game over background image.
+let gameOverImg = new Image();
+gameOverImg.src = "./Menus/game_over.png";
+
+// Game theme song.
+let themeTune = new Audio("./Audio/Theme/fantasy_music.mp3");
+themeTune.volume = 0.25;
+themeTune.autoplay = true;
+
+// Gold collected SFX.
+let goldCollected = new Audio("./Audio/SFX/goldSFX.mp3");
+goldCollected.volume = 0.7;
+// #endregion
+
+// When application first loads.
 window.onload = function()
 {
+    // Set a game state on window load. gameOver is always set to true,
+    // so start menu will appear every time the web page is loaded.
     if (!gameOver)
     {
         gameState = 2;
     }else
     {
-        gameState == 1;
+        gameState == 0;
     }
-    // Get new instance of current clock time
+    // Get new instance of current clock time.
     startTimeMS = new Date().getTime();
-    window.requestAnimationFrame(gameLoop);    
+    window.requestAnimationFrame(gameLoop); // Recursive loop.    
 }
 
+// Compare sprites x/y half extents.
 function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7, shape8, shape9, shape10, shape11, shape12, shape13, shape14, shape15, shape16, shape17, shape18, shape19, shape20, shape21, shape22, shape23, shape24, shape25)
 {
+    // Collision split up into separate object checks as pushing to array and checking that way was not viable.
+    // This is due to the data being undefined, an issue I have encountered several times throughout development.
+
+    // There are wall colliders
+    // and gold colliders.
+
+    // Wall colliders set player velocity to 0, whereas gold colliders increment gold collected counter and make the object disappear offscreen. 
+
+    // #region Shapes
     shape0 = player;
     shape1 = collider0;
     shape2 = collider01;
@@ -362,7 +379,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     shape23 = goldChest2;
     shape24 = goldChest3;
     shape25 = goldChest4;
-    // No need to set shapes in here.
+    // #endregion
+    
+    // #region Wall colliders
     let vX0 = (shape0.Position.x + (shape0.img.width / 2)) - (shape1.Position.x + (shape1.img.width / 2)),
         vY0 = (shape0.Position.y + (shape0.img.height / 2)) - (shape1.Position.y + (shape1.img.height / 2)),
         halfWidths0 = (shape0.img.width / 2) + (shape1.img.width / 2),
@@ -372,8 +391,6 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX0) < halfWidths0 && Math.abs(vY0) < halfHeights0)
     {
-        //console.log("Collision");
-
         let oX0 = halfWidths0 - Math.abs(vX0),
             oY0 = halfHeights0 - Math.abs(vY0);
 
@@ -384,14 +401,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir0 = "t";
                 shape0.Position.y += oY0;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir0 = "b";
                 shape0.Position.y -= oY0;
-                //console.log("Collision bottom");
             }
         }else
         {
@@ -400,14 +415,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir0 = "l";
                 shape0.Position.x += oX0;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir0 = "r";
                 shape0.Position.x -= oX0;
-                //console.log("Collision right");
             }
         }
     }
@@ -418,11 +431,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights1 = (shape0.img.height / 2) + (shape2.img.height / 2),
     colDir1 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX1) < halfWidths1 && Math.abs(vY1) < halfHeights1)
     {
-        //console.log("Collision");
-
         let oX1 = halfWidths1 - Math.abs(vX1),
             oY1 = halfHeights1 - Math.abs(vY1);
 
@@ -433,14 +444,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir1 = "t";
                 shape0.Position.y += oY1;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir1 = "b";
                 shape0.Position.y -= oY1;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -450,14 +459,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir1 = "l";
                 shape0.Position.x += oX1;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir1 = "r";
                 shape0.Position.x -= oX1;
-                //console.log("Collision right");
             }
         }
     }
@@ -468,11 +475,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights2 = (shape0.img.height / 2) + (shape3.img.height / 2),
     colDir2 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX2) < halfWidths2 && Math.abs(vY2) < halfHeights2)
     {
-        //console.log("Collision");
-
         let oX2 = halfWidths2 - Math.abs(vX2),
             oY2 = halfHeights2 - Math.abs(vY2);
 
@@ -483,14 +488,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir2 = "t";
                 shape0.Position.y += oY2;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir2 = "b";
                 shape0.Position.y -= oY2;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -500,14 +503,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir2 = "l";
                 shape0.Position.x += oX2;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir2 = "r";
                 shape0.Position.x -= oX2;
-                //console.log("Collision right");
             }
         }
     }
@@ -518,10 +519,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights3 = (shape0.img.height / 2) + (shape4.img.height / 2),
     colDir3 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX3) < halfWidths3 && Math.abs(vY3) < halfHeights3)
     {
-        //console.log("Collision");
 
         let oX3 = halfWidths3 - Math.abs(vX3),
             oY3 = halfHeights3 - Math.abs(vY3);
@@ -533,14 +533,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir3 = "t";
                 shape0.Position.y += oY3;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir3 = "b";
                 shape0.Position.y -= oY3;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -550,14 +548,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir3 = "l";
                 shape0.Position.x += oX3;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir3 = "r";
                 shape0.Position.x -= oX3;
-                //console.log("Collision right");
             }
         }
     }
@@ -568,11 +564,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights4 = (shape0.img.height / 2) + (shape5.img.height / 2),
     colDir4 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX4) < halfWidths4 && Math.abs(vY4) < halfHeights4)
     {
-        //console.log("Collision");
-
         let oX4 = halfWidths4 - Math.abs(vX4),
             oY4 = halfHeights4 - Math.abs(vY4);
 
@@ -583,14 +577,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir4 = "t";
                 shape0.Position.y += oY4;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir4 = "b";
                 shape0.Position.y -= oY4;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -600,14 +592,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir4 = "l";
                 shape0.Position.x += oX4;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir4 = "r";
                 shape0.Position.x -= oX4;
-                //console.log("Collision right");
             }
         }
     }
@@ -618,11 +608,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights5 = (shape0.img.height / 2) + (shape6.img.height / 2),
     colDir5 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX5) < halfWidths5 && Math.abs(vY5) < halfHeights5)
     {
-        //console.log("Collision");
-
         let oX5 = halfWidths5 - Math.abs(vX5),
             oY5 = halfHeights5 - Math.abs(vY5);
 
@@ -633,14 +621,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir5 = "t";
                 shape0.Position.y += oY5;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir5 = "b";
                 shape0.Position.y -= oY5;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -650,14 +636,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir5 = "l";
                 shape0.Position.x += oX5;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir5 = "r";
                 shape0.Position.x -= oX5;
-                //console.log("Collision right");
             }
         }
     }
@@ -668,11 +652,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights6 = (shape0.img.height / 2) + (shape7.img.height / 2),
     colDir6 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX6) < halfWidths6 && Math.abs(vY6) < halfHeights6)
     {
-        //console.log("Collision");
-
         let oX6 = halfWidths6 - Math.abs(vX6),
             oY6 = halfHeights6 - Math.abs(vY6);
 
@@ -683,14 +665,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir6 = "t";
                 shape0.Position.y += oY6;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir6 = "b";
                 shape0.Position.y -= oY6;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -700,14 +680,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir6 = "l";
                 shape0.Position.x += oX6;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir6 = "r";
                 shape0.Position.x -= oX6;
-                //console.log("Collision right");
             }
         }
     }
@@ -718,11 +696,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights7 = (shape0.img.height / 2) + (shape8.img.height / 2),
     colDir7 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX7) < halfWidths7 && Math.abs(vY7) < halfHeights7)
     {
-        //console.log("Collision");
-
         let oX7 = halfWidths7 - Math.abs(vX7),
             oY7 = halfHeights7 - Math.abs(vY7);
 
@@ -733,14 +709,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir7 = "t";
                 shape0.Position.y += oY7;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir7 = "b";
                 shape0.Position.y -= oY7;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -750,14 +724,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir7 = "l";
                 shape0.Position.x += oX7;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir7 = "r";
                 shape0.Position.x -= oX7;
-                //console.log("Collision right");
             }
         }
     }
@@ -768,11 +740,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights8 = (shape0.img.height / 2) + (shape9.img.height / 2),
     colDir8 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX8) < halfWidths8 && Math.abs(vY8) < halfHeights8)
     {
-        //console.log("Collision");
-
         let oX8 = halfWidths8 - Math.abs(vX8),
             oY8 = halfHeights8 - Math.abs(vY8);
 
@@ -783,14 +753,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir8 = "t";
                 shape0.Position.y += oY8;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir8 = "b";
                 shape0.Position.y -= oY8;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -800,14 +768,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir8 = "l";
                 shape0.Position.x += oX8;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir8 = "r";
                 shape0.Position.x -= oX8;
-                //console.log("Collision right");
             }
         }
     }
@@ -818,11 +784,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights9 = (shape0.img.height / 2) + (shape10.img.height / 2),
     colDir9 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX9) < halfWidths9 && Math.abs(vY9) < halfHeights9)
     {
-        //console.log("Collision");
-
         let oX9 = halfWidths9 - Math.abs(vX9),
             oY9 = halfHeights9 - Math.abs(vY9);
 
@@ -833,14 +797,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir9 = "t";
                 shape0.Position.y += oY9;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir9 = "b";
                 shape0.Position.y -= oY9;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -850,14 +812,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir9 = "l";
                 shape0.Position.x += oX9;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir9 = "r";
                 shape0.Position.x -= oX9;
-                //console.log("Collision right");
             }
         }
     }
@@ -868,11 +828,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights10 = (shape0.img.height / 2) + (shape11.img.height / 2),
     colDir10 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX10) < halfWidths10 && Math.abs(vY10) < halfHeights10)
     {
-        //console.log("Collision");
-
         let oX10 = halfWidths10 - Math.abs(vX10),
             oY10 = halfHeights10 - Math.abs(vY10);
 
@@ -883,14 +841,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir10 = "t";
                 shape0.Position.y += oY10;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir10 = "b";
                 shape0.Position.y -= oY10;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -900,14 +856,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir10 = "l";
                 shape0.Position.x += oX10;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir10 = "r";
                 shape0.Position.x -= oX10;
-                //console.log("Collision right");
             }
         }
     }
@@ -918,11 +872,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights11 = (shape0.img.height / 2) + (shape12.img.height / 2),
     colDir11 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX11) < halfWidths11 && Math.abs(vY11) < halfHeights11)
     {
-        //console.log("Collision");
-
         let oX11 = halfWidths11 - Math.abs(vX11),
             oY11 = halfHeights11 - Math.abs(vY11);
 
@@ -933,14 +885,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir11 = "t";
                 shape0.Position.y += oY11;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir11 = "b";
                 shape0.Position.y -= oY11;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -950,14 +900,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir11 = "l";
                 shape0.Position.x += oX11;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir11 = "r";
                 shape0.Position.x -= oX11;
-                //console.log("Collision right");
             }
         }
     }
@@ -968,11 +916,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights12 = (shape0.img.height / 2) + (shape13.img.height / 2),
     colDir12 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX12) < halfWidths12 && Math.abs(vY12) < halfHeights12)
     {
-        //console.log("Collision");
-
         let oX12 = halfWidths12 - Math.abs(vX12),
             oY12 = halfHeights12 - Math.abs(vY12);
 
@@ -983,14 +929,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir12 = "t";
                 shape0.Position.y += oY12;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir12 = "b";
                 shape0.Position.y -= oY12;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1000,14 +944,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir12 = "l";
                 shape0.Position.x += oX12;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir12 = "r";
                 shape0.Position.x -= oX12;
-                //console.log("Collision right");
             }
         }
     }
@@ -1018,11 +960,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights13 = (shape0.img.height / 2) + (shape14.img.height / 2),
     colDir13 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX13) < halfWidths13 && Math.abs(vY13) < halfHeights13)
     {
-        //console.log("Collision");
-
         let oX13 = halfWidths13 - Math.abs(vX13),
             oY13 = halfHeights13 - Math.abs(vY13);
 
@@ -1033,14 +973,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir13 = "t";
                 shape0.Position.y += oY13;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir13 = "b";
                 shape0.Position.y -= oY13;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1050,14 +988,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir13 = "l";
                 shape0.Position.x += oX13;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir13 = "r";
                 shape0.Position.x -= oX13;
-                //console.log("Collision right");
             }
         }
     }
@@ -1068,11 +1004,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights14 = (shape0.img.height / 2) + (shape15.img.height / 2),
     colDir14 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX14) < halfWidths14 && Math.abs(vY14) < halfHeights14)
     {
-        //console.log("Collision");
-
         let oX14 = halfWidths14 - Math.abs(vX14),
             oY14 = halfHeights14 - Math.abs(vY14);
 
@@ -1083,14 +1017,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir14 = "t";
                 shape0.Position.y += oY14;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir14 = "b";
                 shape0.Position.y -= oY14;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1100,14 +1032,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir14 = "l";
                 shape0.Position.x += oX14;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir14 = "r";
                 shape0.Position.x -= oX14;
-                //console.log("Collision right");
             }
         }
     }
@@ -1118,11 +1048,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights15 = (shape0.img.height / 2) + (shape16.img.height / 2),
     colDir15 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX15) < halfWidths15 && Math.abs(vY15) < halfHeights15)
     {
-        //console.log("Collision");
-
         let oX15 = halfWidths15 - Math.abs(vX15),
             oY15 = halfHeights15 - Math.abs(vY15);
 
@@ -1133,14 +1061,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir15 = "t";
                 shape0.Position.y += oY15;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir15 = "b";
                 shape0.Position.y -= oY15;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1150,14 +1076,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir15 = "l";
                 shape0.Position.x += oX15;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir15 = "r";
                 shape0.Position.x -= oX15;
-                //console.log("Collision right");
             }
         }
     }
@@ -1168,11 +1092,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights16 = (shape0.img.height / 2) + (shape17.img.height / 2),
     colDir16 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX16) < halfWidths16 && Math.abs(vY16) < halfHeights16)
     {
-        //console.log("Collision");
-
         let oX16 = halfWidths16 - Math.abs(vX16),
             oY16 = halfHeights16 - Math.abs(vY16);
 
@@ -1183,14 +1105,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir16 = "t";
                 shape0.Position.y += oY16;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir16 = "b";
                 shape0.Position.y -= oY16;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1200,14 +1120,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir16 = "l";
                 shape0.Position.x += oX16;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir16 = "r";
                 shape0.Position.x -= oX16;
-                //console.log("Collision right");
             }
         }
     }
@@ -1218,11 +1136,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights17 = (shape0.img.height / 2) + (shape18.img.height / 2),
     colDir17 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX17) < halfWidths17 && Math.abs(vY17) < halfHeights17)
     {
-        //console.log("Collision");
-
         let oX17 = halfWidths17 - Math.abs(vX17),
             oY17 = halfHeights17 - Math.abs(vY17);
 
@@ -1233,14 +1149,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir17 = "t";
                 shape0.Position.y += oY17;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir17 = "b";
                 shape0.Position.y -= oY17;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1250,14 +1164,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir17 = "l";
                 shape0.Position.x += oX17;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir17 = "r";
                 shape0.Position.x -= oX17;
-                //console.log("Collision right");
             }
         }
     }
@@ -1268,11 +1180,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights18 = (shape0.img.height / 2) + (shape19.img.height / 2),
     colDir18 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX18) < halfWidths18 && Math.abs(vY18) < halfHeights18)
     {
-        //console.log("Collision");
-
         let oX18 = halfWidths18 - Math.abs(vX18),
             oY18 = halfHeights18 - Math.abs(vY18);
 
@@ -1283,14 +1193,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir18 = "t";
                 shape0.Position.y += oY18;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir18 = "b";
                 shape0.Position.y -= oY18;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1300,14 +1208,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir18 = "l";
                 shape0.Position.x += oX18;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir18 = "r";
                 shape0.Position.x -= oX18;
-                //console.log("Collision right");
             }
         }
     }
@@ -1318,11 +1224,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights19 = (shape0.img.height / 2) + (shape20.img.height / 2),
     colDir19 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX19) < halfWidths19 && Math.abs(vY19) < halfHeights19)
     {
-        //console.log("Collision");
-
         let oX19 = halfWidths19 - Math.abs(vX19),
             oY19 = halfHeights19 - Math.abs(vY19);
 
@@ -1333,14 +1237,12 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir19 = "t";
                 shape0.Position.y += oY19;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir19 = "b";
                 shape0.Position.y -= oY19;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1350,17 +1252,18 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             {
                 colDir19 = "l";
                 shape0.Position.x += oX19;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir19 = "r";
                 shape0.Position.x -= oX19;
-                //console.log("Collision right");
             }
         }
     }
+    // #endregion
+
+    // #region Gold colliders 
 
     let vX20 = (shape0.Position.x + (shape0.img.width / 2)) - (shape21.Position.x + (shape21.img.width / 2)),
     vY20 = (shape0.Position.y + (shape0.img.height / 2)) - (shape21.Position.y + (shape21.img.height / 2)),
@@ -1368,11 +1271,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights20 = (shape0.img.height / 2) + (shape21.img.height / 2),
     colDir20 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX20) < halfWidths20 && Math.abs(vY20) < halfHeights20)
     {
-        //console.log("Collision");
-
         let oX20 = halfWidths20 - Math.abs(vX20),
             oY20 = halfHeights20 - Math.abs(vY20);
 
@@ -1382,23 +1283,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vY20 > 0)
             {
                 colDir20 = "t";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y += oY20;
                 shape21.Position.x = 5000;
                 shape21.Position.y = 5000;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir20 = "b";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y -= oY20;
                 shape21.Position.x = 5000;
                 shape21.Position.y = 5000;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1407,23 +1304,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vX20 > 0)
             {
                 colDir20 = "l";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x += oX20;
                 shape21.Position.x = 5000;
                 shape21.Position.y = 5000;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir20 = "r";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x -= oX20;
                 shape21.Position.x = 5000;
                 shape21.Position.y = 5000;
-                //console.log("Collision right");
             }
         }
     }
@@ -1437,8 +1330,6 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
 // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX21) < halfWidths21 && Math.abs(vY21) < halfHeights21)
     {
-        //console.log("Collision");
-
         let oX21 = halfWidths21 - Math.abs(vX21),
             oY21 = halfHeights21 - Math.abs(vY21);
 
@@ -1448,23 +1339,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vY21 > 0)
             {
                 colDir21 = "t";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y += oY20;
                 shape22.Position.x = 6000;
                 shape22.Position.y = 6000;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir20 = "b";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y -= oY20;
                 shape22.Position.x = 6000;
                 shape22.Position.y = 6000;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1473,23 +1360,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vX21 > 0)
             {
                 colDir21 = "l";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x += oX20;
                 shape22.Position.x = 6000;
                 shape22.Position.y = 6000;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir21 = "r";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x -= oX20;
                 shape22.Position.x = 6000;
                 shape22.Position.y = 6000;
-                //console.log("Collision right");
             }
         }
     }
@@ -1500,11 +1383,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights22 = (shape0.img.height / 2) + (shape23.img.height / 2),
     colDir22 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX22) < halfWidths22 && Math.abs(vY22) < halfHeights22)
     {
-        //console.log("Collision");
-
         let oX22 = halfWidths22 - Math.abs(vX22),
             oY22 = halfHeights22 - Math.abs(vY22);
 
@@ -1514,23 +1395,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vY22 > 0)
             {
                 colDir22 = "t";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y += oY20;
                 shape23.Position.x = 7000;
                 shape23.Position.y = 7000;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir22 = "b";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y -= oY20;
                 shape23.Position.x = 7000;
                 shape23.Position.y = 7000;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1539,23 +1416,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vX22 > 0)
             {
                 colDir22 = "l";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x += oX20;
                 shape23.Position.x = 7000;
                 shape23.Position.y = 7000;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir22 = "r";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x -= oX20;
                 shape23.Position.x = 7000;
                 shape23.Position.y = 7000;
-                //console.log("Collision right");
             }
         }
     }
@@ -1566,11 +1439,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights23 = (shape0.img.height / 2) + (shape24.img.height / 2),
     colDir23 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX23) < halfWidths23 && Math.abs(vY23) < halfHeights23)
     {
-        //console.log("Collision");
-
         let oX23 = halfWidths23 - Math.abs(vX23),
             oY23 = halfHeights23 - Math.abs(vY23);
 
@@ -1580,23 +1451,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vY23 > 0)
             {
                 colDir23 = "t";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y += oY20;
                 shape24.Position.x = 8000;
                 shape24.Position.y = 8000;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir23 = "b";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y -= oY20;
                 shape24.Position.x = 8000;
                 shape24.Position.y = 8000;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1605,23 +1472,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vX23 > 0)
             {
                 colDir23 = "l";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x += oX20;
                 shape24.Position.x = 8000;
                 shape24.Position.y = 8000;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir23 = "r";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x -= oX20;
                 shape24.Position.x = 8000;
                 shape24.Position.y = 8000;
-                //console.log("Collision right");
             }
         }
     }
@@ -1632,11 +1495,9 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
     halfHeights24 = (shape0.img.height / 2) + (shape25.img.height / 2),
     colDir24 = null;
 
-// Whenever the x or y velocity of the player exceeds the width or height of another obj
+    // Whenever the x or y velocity of the player exceeds the width or height of another obj
     if (Math.abs(vX24) < halfWidths24 && Math.abs(vY24) < halfHeights24)
     {
-        //console.log("Collision");
-
         let oX24 = halfWidths24 - Math.abs(vX24),
             oY24 = halfHeights24 - Math.abs(vY24);
 
@@ -1646,23 +1507,19 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vY24 > 0)
             {
                 colDir24 = "t";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y += oY20;
                 shape25.Position.x = 9000;
                 shape25.Position.y = 9000;
-                //console.log("Collision top");
             }
             // Bottom collision
             else
             {
                 colDir24 = "b";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.y -= oY20;
                 shape25.Position.x = 9000;
                 shape25.Position.y = 9000;
-                //console.log("Collision bottom");
             }
         }
         else
@@ -1671,52 +1528,55 @@ function colCheck(shape0, shape1, shape2, shape3, shape4, shape5, shape6, shape7
             if (vX24 > 0)
             {
                 colDir24 = "l";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x += oX20;
                 shape25.Position.x = 9000;
                 shape25.Position.y = 9000;
-                //console.log("Collision left");
             }
             // Right collision
             else
             {
                 colDir24 = "r";
-                coinsCollected += 1;
+                totalGoldCollected += 1;
                 goldCollected.play();
-                //shape0.Position.x -= oX20;
                 shape25.Position.x = 9000;
                 shape25.Position.y = 9000;
-                //console.log("Collision right");
             }
         }
     }
-
+    // #endregion
+    
+    // Return all of my collisions.
     return colDir0, colDir1, colDir2, colDir3, colDir4, colDir5, colDir6, colDir7, colDir8, colDir9, colDir10, colDir11, colDir12, colDir13, colDir14, colDir15, colDir16, colDir17, colDir18, colDir19, colDir20, colDir21, colDir22, colDir23, colDir24;
 }
 
 // Keeps track of delta time
 function Update(delta)
 {
-    // When delta time exceeds 1000, start a new clock cycle
+    // When delta time exceeds 1000, start a new clock cycle.
     if ((delta>1000))
     {
         startTimeMS = new Date().getTime();
     }
     
-    // Check for input each delta frame update
+    // Check for input each delta frame update.
     Input();
 
+    // If spacebar is pressed in main menu.
     if (keys[32] && gameState == 0)
     {
-        gameState = 1;
+        gameState = 1; // Set game state to initialise.
     }
 
+    // If spacebar is pressed in game over.
     if (keys[32] && gameState == 3)
     {
-        gameState = 1;
+        gameState = 1; // Set game state to initialise.
     }
 
+    // #region Movement
+    // animationFrame() in here as trying to prevent as many animation calls
+    // being sent to call stack. 
     if (keys[65])
     {
         player.Velocity.x = player.Velocity.x -0.5;
@@ -1740,36 +1600,26 @@ function Update(delta)
         player.Velocity.y = player.Velocity.y +0.5;
         animationFrame();
     }
-    
-    let dirOG = colCheck(player);
+    // #endregion
 
-    // If collision check returns with a left or right collision,
-    // set the player's x velocity to 0 so they cannot move through
-    // the obj being collided with
-    if (dirOG === "l" || dirOG === "r") {
-        player.Velocity.x = 0;
+    // Check for collisions.
+    let dir = colCheck(player);
+
+    // If there is a left or right side collision
+    if (dir === "l" || dir === "r") {
+        player.Velocity.x = 0; // Player velocity is equal to 0.
     }
-    // If collision check returns with a top collision,
-    // set the player's y velocity to 0 so they cannot move through
-    // the obj being collided with
-    else if (dirOG === "t") {
-        player.Velocity.y = 0;
+    // If there is a top side collision
+    else if (dir === "t") {
+        player.Velocity.y = 0; // Player velocity is equal to 0.
     }
-    // If collision check returns with a bottom collision,
-    // set the player's y velocity to 0 so they cannot move through
-    // the obj being collided with. This check is separate as we need
-    // to check whether the player is currently grounded for jumping functionality
-    else if (dirOG === "b") {
-        player.Velocity.y = 0;
+    // If there is a bottom side collision
+    else if (dir === "b") {
+        player.Velocity.y = 0; // Player velocity is equal to 0.
     }
 
-    // The player's x/y movement velocity is countered by world friction, this prevents
-    // sliding and provides more accurate movement
-    player.Velocity.x *= friction;
-    player.Velocity.y *= friction;
-    // Apply x and y velocity to player's x and y position coords
-    player.Position.x += player.Velocity.x;
-    player.Position.y += player.Velocity.y;
-
-    //console.log(coinsCollected);
+    player.Velocity.x *= friction; // Player velocity x affected by friction.
+    player.Velocity.y *= friction; // Player velocity y affected by friction.
+    player.Position.x += player.Velocity.x; // Apply velocity to Player x position.
+    player.Position.y += player.Velocity.y; // Apply velocity to Player y position.
 }

@@ -1,16 +1,20 @@
+// Run a reoccuring loop so the game can be run/updated.
+
 function gameLoop()
 {
     switch (gameState)
     {
-        case 0: // START MENU
-            let elapsed0 = new Date().getTime() - startTimeMS;
-            Update(elapsed0);
-            context.rect(0, 0, canvas.width, canvas.height);
-            context.drawImage(menuImg, 0, 0, canvas.width, canvas.height);
-            window.requestAnimationFrame(gameLoop);
+        case 0: // START MENU.
+            let elapsed0 = new Date().getTime() - startTimeMS; // Start a new clock time.
+            Update(elapsed0); // Update parallel to clock time.
+            context.rect(0, 0, canvas.width, canvas.height); // Set up area for main menu image to draw to.
+            context.drawImage(menuImg, 0, 0, canvas.width, canvas.height); // Draw main menu image.
+            window.requestAnimationFrame(gameLoop); // Restart loop.
             break;
-        case 1: // INITIALISE
-            // When application first loads
+        case 1: // INITIALISE.
+            
+            //Set x and y position for all game objects in scene.
+
             player.Position.x = 0;
             player.Position.y = 50;
     
@@ -89,24 +93,28 @@ function gameLoop()
             goldChest4.Position.x = 1120;
             goldChest4.Position.y = 150;
 
-            // theme tune in here?
-            themeTune.play();
-            gameState = 2;
-            window.requestAnimationFrame(gameLoop);
+            themeTune.play(); // Play theme.
+            gameState = 2; // Switch to running game state.
+            window.requestAnimationFrame(gameLoop); // Restart loop.
             break;
-        case 2: // RUNNING
-            let elapsed1 = new Date().getTime() - startTimeMS;
-            Update(elapsed1);
-            context.clearRect(0, 0, 1366, 720);
+        case 2: // RUNNING.
+            let elapsed1 = new Date().getTime() - startTimeMS; // Start a new clock time.
+            Update(elapsed1); // Update parallel to clock time.
+            context.clearRect(0, 0, 1366, 720); // Clear the screen.
 
 
-
+            // For every column in the tileset.
             for (var y = 0; y < tileSetH; y++)
             {
+                // For every row in the tileset.
                 for (var x = 0; x < tileSetW; x++)
                 {
+                    // Find corresponding case in tilemap.
                     switch(tileSet[((y * tileSetW) + x)])
                     {
+                        // Apply x and y position to game object for each case
+                        // and draw the tile in the assigned position.
+
                         case 0:
                             testObj.Position.x = x * testObj.img.width;
                             testObj.Position.y = y * testObj.img.height;
@@ -231,36 +239,37 @@ function gameLoop()
                     }
                 }
             }
-            goldChest0.drawTile(context);
-            goldChest1.drawTile(context);
-            goldChest2.drawTile(context);
-            goldChest3.drawTile(context);
-            goldChest4.drawTile(context);
-            player.draw(context);
+            goldChest0.drawTile(context); // Draw collectible 1.
+            goldChest1.drawTile(context); // Draw collectible 2.
+            goldChest2.drawTile(context); // Draw collectible 3.
+            goldChest3.drawTile(context); // Draw collectible 4.
+            goldChest4.drawTile(context); // Draw collectible 5.
+            player.draw(context); // Draw the player.
 
-            context.font = "48px Comic Sans MS";
-            context.fillStyle = "white";
-            context.textAlign = "center";
-            context.fillText("Gold collected: " + coinsCollected, canvas.width / 2, 40);            
+            context.font = "48px Comic Sans MS"; // Establish UI font.
+            context.fillStyle = "white"; // Establish UI font fill colour.
+            context.textAlign = "center"; // Align text with center of UI element it resides on.
+            context.fillText("Gold collected: " + totalGoldCollected, canvas.width / 2, 40); // Show the total number of gold collected by the player.
 
-            if (coinsCollected >= 5 && gameState == 2)
+            // If the player collects 5 or more gold and the game state is set to running.
+            if (totalGoldCollected >= 5 && gameState == 2)
             {
-                gameState = 3;
+                gameState = 3; // Set the game state to game over.
             }
             
-            window.requestAnimationFrame(gameLoop);
+            window.requestAnimationFrame(gameLoop); // Restart loop.
             break;
         case 3: // GAME OVER
-            let elapsed2 = new Date().getTime() - startTimeMS;
-            Update(elapsed2);
-            coinsCollected = 0;
-            context.rect(0, 0, canvas.width, canvas.height);
-            context.drawImage(gameOverImg, 0, 0, canvas.width, canvas.height);
-            themeTune.pause();
-            themeTune.currentTime = 0;
-            goldCollected.pause();
-            goldCollected.currentTime = 0;
-            window.requestAnimationFrame(gameLoop);
+            let elapsed2 = new Date().getTime() - startTimeMS; // Start a new clock time.
+            Update(elapsed2); // Update parallel to clock time.
+            totalGoldCollected = 0; // Reset total gold collected.
+            context.rect(0, 0, canvas.width, canvas.height); // Set up areas for game over image to draw to.
+            context.drawImage(gameOverImg, 0, 0, canvas.width, canvas.height); // Draw game over image.
+            themeTune.pause(); // Pause game theme.
+            themeTune.currentTime = 0; // Reset game theme.
+            goldCollected.pause(); // Pause gold collected SFX.
+            goldCollected.currentTime = 0; // Reset gold collected SFX.
+            window.requestAnimationFrame(gameLoop); // Restart loop.
             break;
     } 
 }
